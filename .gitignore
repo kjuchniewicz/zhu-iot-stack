@@ -18,3 +18,5 @@ mosquitto/config/*
 grafana/*
 influxdb/*
 nodered/*
+
+secret*
