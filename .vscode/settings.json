@@ -1,0 +1,14 @@
+{
+  "workbench.colorCustomizations": {
+    "editor.lineHighlightBorder": "#30355e",
+    "editorInlayHint.background": "#6e2a5c67",
+    "editorInlayHint.foreground": "#ff51b1",
+    "editorInlayHint.parameterBackground": "#2a566448",
+    "editorInlayHint.parameterForeground": "#07bcd4",
+    "editorInlayHint.typeBackground": "#5a642a62",
+    "editorInlayHint.typeForeground": "#cfec27",
+    "statusBar.debuggingBackground": "#8FBCBB",
+    "statusBar.debuggingForeground": "#434C5E",
+    "statusBar.noFolderBackground": "#8FBCBB"
+  }
+}
