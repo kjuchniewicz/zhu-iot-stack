@@ -1,0 +1,78 @@
+version: "3.9"
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    hostname: mosquitto
+    container_name: mosquitto
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Warsaw
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - ./mosquitto/config:/mosquitto/config:rw
+      - ./mosquitto/data:/mosquitto/data:rw
+      - ./mosquitto/log:/mosquitto/log:rw
+
+  nodered:
+    image: nodered/node-red
+    hostname: nodered
+    container_name: nodered
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Warsaw
+    ports:
+      - 1880:1880
+    volumes:
+      - ./nodered/config:/data:rw
+
+  influxdb:
+    image: influxdb
+    hostname: influxdb
+    container_name: influxdb
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+      - "8090:8090"
+      - "2003:2003"
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb2:rw
+      - ./influxdb/config:/etc/influxdb2:rw
+    environment:
+      - TZ=Europe/Warsaw
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=ZHU_ZARNA
+      - DOCKER_INFLUXDB_INIT_BUCKET=infrastructure
+      - DOCKER_INFLUXDB_INIT_RETENTION=1000d
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
+
+  grafana:
+    image: grafana/grafana
+    hostname: grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/data:/var/lib/grafana:rw
+      - ./grafana/provisioning/:/etc/grafana/provisioning:rw
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:rw
+      - ./grafana/plugins:/var/lib/grafana/plugins:rw
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:rw
+      - ./grafana/datasources:/etc/grafana/datasources:rw
+    depends_on:
+      - influxdb
+    environment:
+      - TZ=Europe/Warsaw
+      - GF_SECURITY_ADMIN_USER=${INFLUXDB_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource
+
+networks:
+  default:
+    name: iot-network
