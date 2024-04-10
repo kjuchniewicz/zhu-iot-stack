@@ -58,7 +58,7 @@ services:
     volumes:
       - ./grafana/data:/var/lib/grafana:rw
       - ./grafana/provisioning/:/etc/grafana/provisioning:rw
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:rw
+      # - ./grafana/grafana.ini:/etc/grafana/grafana.ini:rw
       - ./grafana/plugins:/var/lib/grafana/plugins:rw
       - ./grafana/dashboards:/var/lib/grafana/dashboards:rw
       - ./grafana/datasources:/etc/grafana/datasources:rw
